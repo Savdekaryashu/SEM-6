@@ -10,7 +10,7 @@ import string
 
 # Download necessary NLTK data files (if not already installed)
 nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
+nltk.download('averaged_perceptron_tagger_eng')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
