@@ -14,10 +14,11 @@ plt.show()
 
 # Optional
 # Additional exploration to find patterns in the data
-# Plot the correlation matrix to see relationships between numeric columns
+# Plot the correlation matrix with only numeric columns
 plt.figure(figsize=(10, 8))
-sns.heatmap(titanic.corr(), annot=True, cmap='coolwarm', fmt='.2f')
-plt.title('Correlation Matrix of Titanic Dataset')
+numeric_data = titanic.select_dtypes(include='number')  # Select only numeric columns
+sns.heatmap(numeric_data.corr(), annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Correlation Matrix of Numeric Columns in Titanic Dataset')
 plt.show()
 
 # Explore 'fare' against different categorical variables (e.g., 'class', 'embarked', etc.)
