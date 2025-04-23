@@ -7,7 +7,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag
 from sklearn.feature_extraction.text import TfidfVectorizer
 import string
-
+import pandas as pd
 # Download necessary NLTK data files (if not already installed)
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger_eng')
