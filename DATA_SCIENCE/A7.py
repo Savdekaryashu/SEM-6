@@ -1,6 +1,10 @@
-# Import necessary libraries
+"""1. Extract Sample document and apply following document preprocessing methods:
+Tokenization, POS Tagging, stop words removal, Stemming and Lemmatization.
+2. Create representation of documents by calculating Term Frequency and Inverse
+DocumentFrequency"""
+
 import nltk
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords,wordnet
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
@@ -15,7 +19,7 @@ nltk.download('stopwords')
 nltk.download('wordnet')
 
 # Sample document
-document = "Running is a good exercise, and it's better than sitting. The quick brown fox jumped over the lazy dog."
+document = "Running studies smaller is a good exercise, and it's better than sitting. The quick brown fox jumped over the lazy dog."
 
 # 1. Tokenization
 tokens = word_tokenize(document)
@@ -35,9 +39,21 @@ stemmer = PorterStemmer()
 stemmed_tokens = [stemmer.stem(word) for word in filtered_tokens]
 print("\nStemmed Tokens:", stemmed_tokens)
 
+def get_wordnet_pos(tag):
+    if tag.startswith('J'):
+        return wordnet.ADJ
+    elif tag.startswith('V'):
+        return wordnet.VERB
+    elif tag.startswith('N'):
+        return wordnet.NOUN
+    elif tag.startswith('R'):
+        return wordnet.ADV
+    else:
+        return wordnet.NOUN
+
 # 5. Lemmatization
 lemmatizer = WordNetLemmatizer()
-lemmatized_tokens = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+lemmatized_tokens = [lemmatizer.lemmatize(word.lower(), get_wordnet_pos(tag)) for word, tag in pos_tag(filtered_tokens)]
 print("\nLemmatized Tokens:", lemmatized_tokens)
 
 # 6. TF and IDF Calculation

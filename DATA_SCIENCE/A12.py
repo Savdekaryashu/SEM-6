@@ -1,3 +1,4 @@
+"""Write a simple program in SCALA using Apache Spark framework"""
 import org.apache.spark.sql.SparkSession
 
 object WordCount {
