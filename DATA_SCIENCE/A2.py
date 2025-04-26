@@ -12,35 +12,77 @@ Reason and document your approach properly"""
 
 import pandas as pd
 import numpy as np
-from scipy import stats
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-df = pd.read_csv(r"C:\Users\userp\Downloads\archive (10)\StudentsPerformance.csv")
+# Create Academic Performance dataset
+data = {
+    'Student_ID': [101, 102, 103, 104, 105],
+    'Math_Score': [88, 92, np.nan, 70, 45],
+    'Science_Score': [91, 85, 79, np.nan, 48],
+    'English_Score': [86, 90, 78, 80, 999],  # 999 is an inconsistency (outlier)
+    'Attendance_Rate': [0.95, 0.85, 0.75, np.nan, 0.65]
+}
 
-# Step 1: Clean column names
-df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
+df = pd.DataFrame(data)
 
-# Show initial data
-print("Initial Dataset Info:")
-print(df.info())
+# Show the dataset
+print(df)
 
+# Check missing values
 print("\nMissing Values:\n", df.isnull().sum())
 
-df.loc[2, 'math_score'] = np.nan
-df['math_score'].fillna(df['math_score'].mean(), inplace=True)
+# Fill missing Math_Score, Science_Score, Attendance_Rate with mean
+df.fillna({"Math_Score":df['Math_Score'].mean()}, inplace=True)
+df.fillna({'Science_Score':df['Science_Score'].mean()}, inplace=True)
+df.fillna({'Attendance_Rate':df['Attendance_Rate'].mean()}, inplace=True)
 
-# Step 2: Detect and handle outliers using Z-score for numeric columns
-numeric_cols = ['math_score', 'reading_score', 'writing_score']
-z_scores = np.abs(stats.zscore(df[numeric_cols]))
-df_no_outliers = df[(z_scores < 3).all(axis=1)]
+# Check missing values
+print("\nMissing Values:\n", df.isnull().sum())
 
-# Step 3: Data transformation (log transformation on reading_score)
-df_no_outliers['log_reading_score'] = np.log1p(df_no_outliers['reading_score'])
+# Check for outliers in English_Score
+Q1 = df['English_Score'].quantile(0.25)
+Q3 = df['English_Score'].quantile(0.75)
+IQR = Q3 - Q1
 
-# Show skewness before and after
-print("\nSkewness Before:", df_no_outliers['reading_score'].skew())
-print("Skewness After:", df_no_outliers['log_reading_score'].skew())
+lower_limit = Q1 - 1.5 * IQR
+upper_limit = Q3 + 1.5 * IQR
 
-# Final cleaned and transformed data
-print("\nFinal Cleaned Dataset Sample:\n", df_no_outliers.head())
+print(f"\nLower limit: {lower_limit}, Upper limit: {upper_limit}")
+
+# Identify outliers
+outliers = df[(df['English_Score'] < lower_limit) | (df['English_Score'] > upper_limit)]
+print("\nOutliers:\n", outliers)
+
+# Boxplot for English_Score
+plt.figure(figsize=(8, 4))
+sns.boxplot(x=df['English_Score'])
+plt.title('Boxplot of English Score (After Outlier Treatment)')
+plt.xlabel('English Score')
+plt.show()
+
+
+# Replace 999 in English_Score
+median_value = df['English_Score'].median()
+df.loc[df['English_Score'] > upper_limit, 'English_Score'] = median_value
+
+# Histogram for Math_Score (before transformation)
+plt.figure(figsize=(8, 4))
+sns.histplot(df['Math_Score'], kde=True, color='blue')
+plt.title('Histogram of Math Score (Before Transformation)')
+plt.xlabel('Math Score')
+plt.show()
+
+# Add a small value to avoid log(0)
+df['Math_Score_Log'] = np.log(df['Math_Score'] + 1)
+
+# Histogram for Math_Score_Log (after log transformation)
+plt.figure(figsize=(8, 4))
+sns.histplot(df['Math_Score_Log'], kde=True, color='green')
+plt.title('Histogram of Math Score (After Log Transformation)')
+plt.xlabel('Log of Math Score')
+plt.show()
+
+# Show the dataset after transformation
+print("\nTransformed Dataset:\n", df)
+
