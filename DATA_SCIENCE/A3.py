@@ -1,7 +1,5 @@
 """Perform the following operations on any open source dataset (e.g., data.csv)
 1. Provide summary statistics (mean, median, minimum, maximum, standard deviation) for a
-Curriculum for Third Year of Artificial Intelligence and Data Science (2019 Course), Savitribai Phule Pune University
-http://collegecirculars.unipune.ac.in/sites/documents/Syllabus2022/Forms/AllItems.aspx #84/105
 dataset (age, income etc.) with numeric variables grouped by one of the qualitative
 (categorical) variable. For example, if your categorical variable is age groups and quantitative
 variable is income, then provide summary statistics of income grouped by the age groups.
@@ -25,16 +23,32 @@ grouped_stats = df.groupby('gender')[['math_score', 'reading_score', 'writing_sc
 print("Grouped Summary Statistics by Gender:\n", grouped_stats)
 
 # Create a list that maps numeric values to categorical responses
-# Example: gender -> numeric mapping
-gender_map = {'female': 0, 'male': 1}
-gender_numeric = df['gender'].map(gender_map).tolist()
-print("\nMapped Gender to Numeric Values:\n", gender_numeric[:10])  # Display first 10
+# Create lists for age
+male_age = list(df[df['gender'] == 'Male']['age'])
+female_age = list(df[df['gender'] == 'Female']['age'])
 
-import seaborn as sns
+print("Male Ages:", male_age[:10])
+print("Female Ages:", female_age[:10])
 
-# Load iris dataset
-iris = sns.load_dataset('iris')
+#2) Iris 
 
-# Display basic statistics for each species
-species_stats = iris.groupby('species').describe(percentiles=[.25, .5, .75])
-print("\nBasic Statistical Details of Each Iris Species:\n", species_stats)
+# Step 1: Load the Iris dataset
+df2 = pd.read_csv("G:/TE/DS/dtsets/IRIS.csv")  # <- change path if needed
+
+# Step 2: Display first few rows
+print(df2.head())
+
+# Step 3: Filter species separately
+setosa = df2[df2['species'] == 'Iris-setosa']
+versicolor = df2[df2['species'] == 'Iris-versicolor']
+virginica = df2[df2['species'] == 'Iris-virginica']
+
+# Step 4: Display statistical details
+print("\n--- Iris-setosa ---\n")
+print(setosa.describe(percentiles=[.25, .5, .75]))
+
+print("\n--- Iris-versicolor ---\n")
+print(versicolor.describe(percentiles=[.25, .5, .75]))
+
+print("\n--- Iris-virginica ---\n")
+print(virginica.describe(percentiles=[.25, .5, .75]))
