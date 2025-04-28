@@ -45,10 +45,10 @@ virginica = df2[df2['species'] == 'Iris-virginica']
 
 # Step 4: Display statistical details
 print("\n--- Iris-setosa ---\n")
-print(setosa.describe(percentiles=[.25, .5, .75]))
+print(setosa.describe())
 
 print("\n--- Iris-versicolor ---\n")
-print(versicolor.describe(percentiles=[.25, .5, .75]))
+print(versicolor.describe())
 
 print("\n--- Iris-virginica ---\n")
-print(virginica.describe(percentiles=[.25, .5, .75]))
+print(virginica.describe())
