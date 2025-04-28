@@ -17,7 +17,6 @@ everything that you do to import/read/scrape the data set."""
 # Importing necessary libraries
 import pandas as pd  # For data manipulation and analysis
 import numpy as np  # For numerical operations
-import seaborn as sns  # For data visualization
 import matplotlib.pyplot as plt
 
 df = pd.read_csv(r'C:\Users\userp\Downloads\archive (4)\iris.csv')
